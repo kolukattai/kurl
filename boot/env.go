@@ -11,7 +11,7 @@ import (
 func UpdateConfig(configFileName string, context string) {
 	defaultVal := func() {
 		Config = &models.Config{
-			FilePath:     ".",
+			FilePath:     "./call",
 			EnvVariables: []models.EnvVariables{},
 			DefaultEnv:   0,
 		}

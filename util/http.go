@@ -2,7 +2,6 @@ package util
 
 import (
 	"encoding/json"
-	"fmt"
 	"io"
 	"net/http"
 	"strings"
@@ -46,7 +45,33 @@ func HTTPClient(param models.FrontMatter, config *models.Config) (*models.APIRes
 	if err != nil {
 		return nil, err
 	}
-	fmt.Println(string(body))
+	defer res.Body.Close()
 
-	return &models.APIResponse{}, nil
+	var rBody interface{}
+
+	err = json.Unmarshal(body, &rBody)
+	if err != nil {
+		return nil, err
+	}
+
+	response := &models.APIResponse{}
+	response.Status = res.Status
+	response.StatusCode = res.StatusCode
+	response.Body = rBody
+	response.BodyStr = string(body)
+	response.Cookies = []string{}
+
+	for _, v := range res.Cookies() {
+		response.Cookies = append(response.Cookies, v.Raw)
+	}
+
+	resHeader := map[string]string{}
+
+	for k, v := range res.Header {
+		resHeader[k] = strings.Join(v, ",")
+	}
+
+	response.Headers = resHeader
+
+	return response, nil
 }

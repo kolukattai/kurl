@@ -29,7 +29,7 @@ type EnvVariables struct {
 }
 
 type Config struct {
-	FilePath     string         `json:"file_path"`
+	FilePath     string         `json:"file_folder"`
 	EnvVariables []EnvVariables `json:"env_variables"`
 	DefaultEnv   int            `json:"selected_env"`
 }

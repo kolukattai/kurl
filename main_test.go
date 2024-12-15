@@ -2,8 +2,11 @@ package main
 
 import (
 	"testing"
+
+	"github.com/kolukattai/kurl/util"
 )
 
 func TestCall(t *testing.T) {
-	Call()
+	// Call()
+	util.FileList("./example/")
 }

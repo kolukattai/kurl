@@ -1,7 +1,13 @@
 package boot
 
-import "github.com/kolukattai/kurl/models"
+import (
+	"embed"
+
+	"github.com/kolukattai/kurl/models"
+)
 
 var (
-	Config *models.Config
+	Config         *models.Config
+	StaticFolder   embed.FS
+	TemplateFolder embed.FS
 )

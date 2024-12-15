@@ -4,20 +4,22 @@ Copyright © 2024 NAME HERE <EMAIL ADDRESS>
 package main
 
 import (
-	"fmt"
-
-	"github.com/kolukattai/kurl/cmd"
+	"embed"
 
 	"github.com/kolukattai/kurl/boot"
-	fu "github.com/kolukattai/kurl/functions"
+	"github.com/kolukattai/kurl/cmd"
 )
 
-func Call() {
-	boot.UpdateConfig("config.json", "./example")
-	fmt.Println(boot.Config)
-	fu.Call("example-get-api.md")
-}
+//go:embed static/*
+var staticFS embed.FS
 
+//go:embed templates/*
+var templatesFS embed.FS
+
+func init() {
+	boot.StaticFolder = staticFS
+	boot.TemplateFolder = templatesFS
+}
 func main() {
 	cmd.Execute()
 }
