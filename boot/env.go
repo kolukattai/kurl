@@ -14,6 +14,7 @@ func UpdateConfig(configFileName string, context string) {
 			FilePath:     "./call",
 			EnvVariables: []models.EnvVariables{},
 			DefaultEnv:   0,
+			BuildDir: "dist",
 		}
 	}
 

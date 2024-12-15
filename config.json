@@ -1,3 +1,4 @@
 {
-  "file_folder": "example"
+  "file_folder": "example",
+  "build_dir": "dist"
 }
