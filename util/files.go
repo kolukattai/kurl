@@ -19,7 +19,7 @@ type FileFolderInfo struct {
 }
 
 func (st *FileFolderInfo) GetData(conf *models.Config) (frontMatter models.FrontMatter, documentationString string, err error) {
-	return GetFileData(st.FilePath, conf, true)
+	return GetFileData(st.FilePath, conf, true, false)
 }
 
 func FileList(basePath string) ([]FileFolderInfo, error) {
@@ -70,7 +70,7 @@ func FileExists(filename string) bool {
 	return true
 }
 
-func GetFileData(fileName string, config *models.Config, withDocumentation bool) (frontMatter models.FrontMatter, documentationString string, err error) {
+func GetFileData(fileName string, config *models.Config, withDocumentation bool, skipFrontMatter bool) (frontMatter models.FrontMatter, documentationString string, err error) {
 
 	fileLocation := filepath.Join(config.FilePath, fileName)
 
@@ -88,6 +88,10 @@ func GetFileData(fileName string, config *models.Config, withDocumentation bool)
 	frontMater := ""
 	documentationString = ""
 	index := 0
+
+	if skipFrontMatter {
+		index = 2
+	}
 
 	scanner := bufio.NewScanner(file)
 	// optionally, resize scanner's capacity for lines over 64K, see next example

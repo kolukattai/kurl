@@ -11,10 +11,11 @@ import (
 func UpdateConfig(configFileName string, context string) {
 	defaultVal := func() {
 		Config = &models.Config{
-			FilePath:     "./call",
+			FilePath:     "api",
 			EnvVariables: []models.EnvVariables{},
 			DefaultEnv:   0,
-			BuildDir: "dist",
+			BuildDir:     "dist",
+			Title:        "Kurl Docs",
 		}
 	}
 
