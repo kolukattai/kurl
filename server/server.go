@@ -15,7 +15,7 @@ func RunDoc(port string) {
 
 	p := fmt.Sprintf(":%v", port)
 
-	http.Handle("GET /data/files", handler.GetDrawerData())
+	http.Handle("GET /data/files.json", handler.GetDrawerData())
 	http.Handle("GET /data/call/{id}", handler.GetPageDetailData())
 
 	http.Handle("GET /", handler.HomePage())

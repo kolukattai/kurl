@@ -10,7 +10,7 @@ import (
 
 func Call(fileName string, saveResponse bool) {
 
-	fm, _, err := util.GetFileData(fileName, boot.Config, false)
+	fm, _, err := util.GetFileData(fileName, boot.Config, false, false)
 
 	if err != nil {
 		panic(err)
@@ -27,7 +27,7 @@ func Call(fileName string, saveResponse bool) {
 	resp, err := util.HTTPClient(fm, boot.Config)
 
 	if err != nil {
-		panic(err)
+		panic(err.Error())
 	}
 
 	fmt.Println("\nResponse Headers\n---------------------")
@@ -51,6 +51,7 @@ func Call(fileName string, saveResponse bool) {
 	}
 
 	if saveResponse {
+		resp.Request = fm
 		err := util.SaveResponse(fm.RefID, resp)
 		if err != nil {
 			panic(err)

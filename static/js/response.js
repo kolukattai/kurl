@@ -93,7 +93,7 @@ const responseComponent = {
         v-for="(item, i) in response" :key="i"
         @click="selected = i" 
       >
-        Status [[item.status]]
+        [[item.status]]
       </div>
     </div>
 

@@ -2,6 +2,7 @@ package util
 
 import (
 	"encoding/json"
+	"fmt"
 	"io"
 	"net/http"
 	"strings"
@@ -28,6 +29,7 @@ func HTTPClient(param models.FrontMatter, config *models.Config) (*models.APIRes
 	req, err := http.NewRequest(string(method), url, payloadBody)
 
 	if err != nil {
+		fmt.Println("ERR", err)
 		return nil, err
 	}
 
@@ -37,12 +39,14 @@ func HTTPClient(param models.FrontMatter, config *models.Config) (*models.APIRes
 
 	res, err := client.Do(req)
 	if err != nil {
+		fmt.Println("ERR", err)
 		return nil, err
 	}
 	defer res.Body.Close()
 
 	body, err := io.ReadAll(res.Body)
 	if err != nil {
+		fmt.Println("ERR", err)
 		return nil, err
 	}
 	defer res.Body.Close()
@@ -51,7 +55,7 @@ func HTTPClient(param models.FrontMatter, config *models.Config) (*models.APIRes
 
 	err = json.Unmarshal(body, &rBody)
 	if err != nil {
-		return nil, err
+		rBody = string(body)
 	}
 
 	response := &models.APIResponse{}

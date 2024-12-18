@@ -8,7 +8,7 @@ const homeComponent = {
     const fetchData = async (id) => {
       try {
         data.value = null
-        const res = await fetch(`/data/call/${id}`, {
+        const res = await fetch(`/data/call/${id}.json`, {
           method: "GET",
         })
         const resData = await res.json()
@@ -25,6 +25,8 @@ const homeComponent = {
       let id = window.location.hash;
 
       if (!!!id) {
+        fetchData(btoa("README.md"))
+        hashType.value = "#home"
         return
       }
 
@@ -65,7 +67,7 @@ const homeComponent = {
     }
   },
   template: `<div style="height:100%;">
-    <div v-if="!!data" class="home-layout">
+    <div v-if="!!data && hashType == '#call'" class="home-layout">
       <div class="home-layout__request">
         <h1>[[data.name]]</h1>
         <request-component :request="data.request" />
@@ -74,6 +76,16 @@ const homeComponent = {
       <div class="home-layout__response">
         <response-component :response="data.response" />
       </div>
+    </div>
+    <div v-if="hashType == '#home'" class="index-page">
+      <h1 class="index-page__title">[[data.request.title]]</h1>
+      <div class="index-page__contents">
+        <div class="index-page__contents__content" v-for="(item, i) in data.request.content" :key="i">
+          <h2>[[item.name]]</h2>
+          <p>[[item.content]]</p>
+        </div>
+      </div>
+      <docs-component :docs="data.docs" />
     </div>
   </div>`
 }

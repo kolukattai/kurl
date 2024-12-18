@@ -13,7 +13,7 @@ func HomePage() http.Handler {
 			Title   string
 			Message string
 		}{
-			Title:   "Welcome to My Site",
+			Title:   boot.Config.Title,
 			Message: "This is the home page.",
 		}
 

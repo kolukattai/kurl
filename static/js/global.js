@@ -7,12 +7,12 @@ const app = createApp({
 
     const updateDrawer = async () => {
       try {
-        const res = await fetch("/data/files", {
+        const res = await fetch("/data/files.json", {
           method: "GET"
         })
         const data = await res.json()
 
-        drawerData.value = data.data
+        drawerData.value = [...data.data].filter((e) => ( !(e.fileName == "README.md" || e.fileName == "index.md" )))
         console.log(data);
       } catch (err) {
         console.error(err);
@@ -24,42 +24,15 @@ const app = createApp({
     })
 
 
+    const search = ref("");
+
     return {
-      drawerData
+      drawerData,
+      search,
     }
   }
 })
 
-const drawerComponent = {
-  props: ["item"],
-  setup(props) {
-
-    const fileName = computed(() => {
-      let n = String(props.item.fileName).replace(/\-/g, " ").replace(".md", "")
-      return `${n[0].toUpperCase()}${n.substring(1,n.length)}`;
-    });
-
-    const navigate = computed(() => {
-      let id = btoa(props.item.filePath)
-      return `#call:${id}`
-    })
-
-    return {
-      fileName: fileName,
-      values: props.item,
-      navigate: navigate,
-    }
-  },
-  template: `
-    <li>
-      <span v-if="values.isFolder">[[fileName]]</span>
-      <a v-else :href="navigate">[[fileName]]</a>
-        <ul v-if="!!item.files.length">
-          <drawer-component :item="item" v-for="(item, i) in item.files" :key="i" />
-        </ul>
-    </li>
-  `
-}
 
 function unescapeHtml(str) {
   const element = document.createElement('div');

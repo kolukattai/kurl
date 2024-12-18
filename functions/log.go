@@ -11,12 +11,10 @@ import (
 
 func Log(fileName string) {
 
-	fm, doc, err := util.GetFileData(fileName, boot.Config, true)
+	fm, _, err := util.GetFileData(fileName, boot.Config, true, false)
 	if err != nil {
 		panic(err)
 	}
-
-	fmt.Println(string(util.MdToHTML([]byte(doc))))
 
 	fmt.Printf("Request %v %v\n", fm.Method, fm.URL)
 	if fm.Body != nil {

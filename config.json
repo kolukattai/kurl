@@ -1,3 +1,5 @@
 {
-  "file_folder": "example"
+  "title": "My Docs",
+  "dir": "example",
+  "build_dir": "dist"
 }
