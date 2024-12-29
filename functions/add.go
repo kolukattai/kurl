@@ -23,7 +23,7 @@ func AddNewCall(name string) {
 
 	headers := "headers: {\n\t\"Content-Type\": \"application/json\"\n}\n"
 
-	fm := fmt.Sprintf("\nmethod: GET\nurl: http://example.com/api\n%v", headers)
+	fm := fmt.Sprintf("\nmethod: \"GET\"\nurl: \"http://example.com/api\"\n%v", headers)
 
 	refComment := "# do not change refID, this key is used to connect this api with it's saved response"
 

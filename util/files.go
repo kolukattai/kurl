@@ -73,20 +73,27 @@ func FileExists(filename string) bool {
 func GetFileData(fileName string, config *models.Config, withDocumentation bool, skipFrontMatter bool) (frontMatter models.FrontMatter, documentationString string, err error) {
 
 	fileLocation := filepath.Join(config.Path, fileName)
-
-	fileLocation = strings.Replace(fileLocation, config.Path + "/", "", 1)
-	
-	fileLocation = filepath.Join(config.Path, fileLocation)
+	fmt.Println(fileLocation, 1)
 
 	fileLocation = fmt.Sprintf("%v.md", fileLocation)
+	fmt.Println(fileLocation, 2)
 
 	fileLocation = strings.ReplaceAll(fileLocation, ".md.md", ".md")
 
+	// fileLocation = strings.Replace(fileLocation, config.Path + "/", "", 1)
+	
+	// fileLocation = filepath.Join(config.Path, fileLocation)
+	fmt.Println(fileLocation, 3)
+	
+	fileLocation = strings.ReplaceAll(fileLocation, fmt.Sprintf("%v/%v/", config.Path, config.Path), config.Path + "/")
+
+	fmt.Println(fileLocation, 4)
 	file, err := os.Open(fileLocation)
 	if err != nil {
 		panic(err)
 	}
 
+	fmt.Println(fileLocation, 5)
 	defer file.Close()
 
 	frontMater := ""
@@ -101,7 +108,7 @@ func GetFileData(fileName string, config *models.Config, withDocumentation bool,
 	// optionally, resize scanner's capacity for lines over 64K, see next example
 	for scanner.Scan() {
 		str := scanner.Text()
-
+		fmt.Println(str)
 		if str == "---" && index == 0 {
 			index = 1
 			continue
@@ -110,6 +117,9 @@ func GetFileData(fileName string, config *models.Config, withDocumentation bool,
 		if index == 1 {
 			if str == "---" {
 				index = 2
+				continue
+			}
+			if strings.Contains(str, "#") {
 				continue
 			}
 			frontMater += fmt.Sprintf("%v\n", str)

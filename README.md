@@ -12,5 +12,8 @@ go install github.com/kolukattai/kurl
 
 ## install using
 
-
-
+## Create new endpoint
+```sh
+kurl add my-get-api
+```
+this will create 
