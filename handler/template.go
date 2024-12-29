@@ -12,9 +12,11 @@ func HomePage() http.Handler {
 		data := struct {
 			Title   string
 			Message string
+			Develop bool
 		}{
 			Title:   boot.Config.Title,
 			Message: "This is the home page.",
+			Develop: true,
 		}
 
 		util.RenderTemplate(boot.TemplateFolder, w, "home.html", data)

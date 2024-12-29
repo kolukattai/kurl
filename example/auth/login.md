@@ -4,6 +4,9 @@ refID: 95331c64-8ab8-4a05-846e-3dd64b918c37
 
 method: "POST"
 url: "http://localhost:3000/api/auth/login"
+headers: {
+  "Content-Type": "application/json"
+}
 body: {
   "email": "mrkali@taker.com",
   "password": "wrestlemania@2020"
@@ -12,5 +15,5 @@ body: {
 
 ---
 
-# auth/login
+# Login API
 api document goes here

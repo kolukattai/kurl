@@ -8,5 +8,5 @@ import (
 
 func TestCall(t *testing.T) {
 	boot.UpdateConfig("config.json", "example")
-	Call("example-get-api.md", false)
+	Call("example-get-api.md", "")
 }

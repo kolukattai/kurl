@@ -13,7 +13,7 @@ import (
 )
 
 func AddNewCall(name string) {
-	fileName := filepath.Join(boot.Config.FilePath, name)
+	fileName := filepath.Join(boot.Config.Path, name)
 
 	fileName = fmt.Sprintf("%v.md", fileName)
 
@@ -39,7 +39,7 @@ func AddNewCall(name string) {
 	}
 
 	if util.FileExists(fileName) {
-		log.Fatal("File ", name, "already exists in the location", boot.Config.FilePath)
+		log.Fatal("File ", name, "already exists in the location", boot.Config.Path)
 	}
 
 	err = os.WriteFile(fileName, []byte(tmp), 0744)

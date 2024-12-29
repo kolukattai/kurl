@@ -40,6 +40,59 @@ func GetSavedResponse(refID string) []*models.APIResponse {
 	return response
 }
 
+func DeleteSaved(refID string, index int) []*models.APIResponse {
+	folderLocation := "./.saved"
+
+	fileLocation := filepath.Join(folderLocation, refID)
+
+	file, err := os.ReadFile(fileLocation)
+
+	if err != nil {
+		fmt.Println(err.Error())
+		return []*models.APIResponse{}
+	}
+
+	file, err = GZip().UnPack(file)
+
+	if err != nil {
+		fmt.Println(err.Error())
+		return []*models.APIResponse{}
+	}
+
+	response := []*models.APIResponse{}
+
+	err = json.Unmarshal(file, &response)
+
+	if err != nil {
+		fmt.Println(err.Error())
+		return []*models.APIResponse{}
+	}
+
+	newResponse := []*models.APIResponse{}
+	newResponse = append(newResponse, response[:index]...)
+	newResponse = append(newResponse, response[index+1:]...)
+
+	file, err = json.Marshal(newResponse)
+
+	if err != nil {
+		panic(err)
+	}
+
+	file, err = GZip().Pack(file)
+
+	if err != nil {
+		panic(err)
+	}
+
+	err = os.WriteFile(fileLocation, file, 0644)
+
+	if err != nil {
+		panic(err)
+	}
+
+	return newResponse
+}
+
 func SaveResponse(refID string, resp *models.APIResponse) error {
 	folderLocation := "./.saved"
 

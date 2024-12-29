@@ -78,7 +78,7 @@ func getFileInfoFromFS(fSys embed.FS, basePath string) ([]FileInfo, error) {
 
 func Run() {
 
-	err := os.Mkdir(boot.Config.BuildDir, 0755)
+	err := os.Mkdir(boot.Config.Build, 0755)
 	if err != nil {
 		// panic(err)
 		fmt.Println(err.Error())
@@ -89,14 +89,16 @@ func Run() {
 	data := struct {
 		Title   string
 		Message string
+		Develop bool
 	}{
 		Title:   "API Documentation",
 		Message: "",
+		Develop: false,
 	}
 
 	res := util.RenderTemplate(boot.TemplateFolder, nil, "home.html", data)
 
-	os.WriteFile(filepath.Join(boot.Config.BuildDir, "index.html"), []byte(res), 0744)
+	os.WriteFile(filepath.Join(boot.Config.Build, "index.html"), []byte(res), 0744)
 
 	filesData();
 

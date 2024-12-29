@@ -17,11 +17,12 @@ type FrontMatter struct {
 }
 
 type APIResponse struct {
-	Headers    map[string]string `json:"headers"`
-	Body       interface{}       `json:"body"`
-	BodyStr    string            `json:"body_str"`
-	StatusCode int               `json:"status_code"`
-	Status     string            `json:"status"`
-	Cookies    []string          `json:"cookies"`
-	Request    FrontMatter       `json:"request"`
+	Headers    map[string]string      `json:"headers"`
+	Body       interface{}            `json:"body"`
+	BodyStr    string                 `json:"body_str"`
+	StatusCode int                    `json:"status_code"`
+	Status     string                 `json:"status"`
+	Cookies    []string               `json:"cookies"`
+	Request    FrontMatter            `json:"request"`
+	Templates  map[string]interface{} `json:"templates"`
 }

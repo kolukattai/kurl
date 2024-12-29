@@ -11,7 +11,7 @@ import (
 
 func processStaticFolder() {
 
-	err := os.MkdirAll(filepath.Join(boot.Config.BuildDir, "static"), 0744)
+	err := os.MkdirAll(filepath.Join(boot.Config.Build, "static"), 0744)
 	if err != nil {
 		panic(err)
 	}
@@ -29,14 +29,14 @@ func processStaticFolder() {
 	}
 
 	for _, v := range fileInfos {
-		folderPath := filepath.Join(boot.Config.BuildDir, "static", strings.Replace(v.FullPath, v.Name, "", 1))
+		folderPath := filepath.Join(boot.Config.Build, "static", strings.Replace(v.FullPath, v.Name, "", 1))
 
 		err := os.MkdirAll(folderPath, 0744)
 		if err != nil {
 			panic(err)
 		}
 
-		filePath := filepath.Join(boot.Config.BuildDir, "static", v.FullPath)
+		filePath := filepath.Join(boot.Config.Build, "static", v.FullPath)
 
 		if v.IsFolder {
 			continue

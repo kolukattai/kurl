@@ -1,7 +1,11 @@
 
 
 {{define "content"}}
- 
+
+  {{if .Develop}}
+    <div id="dev-mode"></div>
+  {{end}}
+
   <home-component />
 
 {{end}}
@@ -12,4 +16,6 @@
   <script src="/static/js/request.js"></script>
   <script src="/static/js/response.js"></script>
   <script src="/static/js/docs.js"></script>
+  <script src="/static/js/env.js"></script>
+  <script src="/static/js/request-template.js"></script>
 {{end}}

@@ -3,125 +3,118 @@ const requestComponent = {
 
   setup(props) {
 
+    const selected = ref("curl");
+    const templates = ref([]);
+
     Vue.onMounted(() => {
-      console.log("request mounted", props.request);
+      updateTemplates()
     });
 
+    const updateTemplates = () => {
+      let arr = []
+      arr.push({
+        key: "curl",
+        value: curlTemplate()
+      })
+      arr.push({
+        key: "JavaScript",
+        value: fetchTemplate()
+      })
+      templates.value = arr.map((e) => {
+        let el = e
+        el.value = updateVariables(e.value)
+        return el
+      });
+    }
 
-    const className = Vue.computed(() => {
-      return `request-bar__method request-bar__method--${String(props.request.method).toLowerCase()}` 
-    })
+    const updateVariables = (val) => {
+      let env = sessionStorage.getItem("env")
+      if (!!!env) {
+        return val
+      }
+      try {
+        let arr = []
+        arr = JSON.parse(env)
+        arr.forEach((e) => {
+          let fromKey = `{{${e.key}}}`
+          val = val.replaceAll(fromKey, e.value)
+        })
+        return val
+      } catch (err) {
+        console.error(err);
+        return val
+      }
+    }
 
-    const requestParams = Vue.computed(() => {
-      let req = []
-      
+    const curlTemplate = () => {
+      let result = `curl -X ${props.request.method} ${props.request.url}`
+
       if (!!props.request.headers) {
-        req.push("headers")
-      }
-      
-      if (!!props.request.body) {
-        req.push("body")
-      }
-
-      if (!!req.length) {
-        selected.value = req[0]
-      }
-
-      return req
-    })
-
-    const selected = ref("");
-
-
-    const headers = Vue.computed(() => {
-      const headerList = []
-
-      for (const key in props.request.headers) {
-        if (Object.prototype.hasOwnProperty.call(props.request.headers, key)) {
-          const value = props.request.headers[key];
-          headerList.push({key: key, value: value})
+        for (const key in props.request.headers) {
+          result += `\\\n\t-H "${key}: ${JSON.stringify(props.request.headers[key]).replace(/\"/g, '')}"`
         }
       }
 
-      return headerList
-    })
-
-
-    const body = Vue.computed(() => {
-      if (JSON.stringify(props.request.headers).toLowerCase().includes("application/json")) {
-        return `<pre>
-  <code class="language-json">
-    ${JSON.stringify(props.request.body, null, 4)}
-  </code>
-</pre>`
+      if (!!props.request.body) {
+        let bodyType = typeof props.request.body
+        if (bodyType == "object") {
+          result += `\\\n\t-d '${JSON.stringify(props.request.body)}'`
+        } else {
+          result += `\\\n\t-d '${props.request.body}'`
+        }
       }
-      return ""
-    })
 
+      return result
+    }
 
-    Vue.onMounted(() => {
-      if (!!requestParams.length) {
-        selected.value = requestParams[0]
+    const fetchTemplate = () => {
+
+      let requestHeader = () => {
+        if (!!!props.request.headers) {
+          return ""
+        }
+        let headObj = ""
+        for (const key in props.request.headers) {
+          headObj += `\t"${key}": "${props.request.headers[key]}"\n`
+        }
+        let headerVal = `,\n\theaders: {\n\t${headObj}\t}`
+        return headerVal
       }
-    })
+      let requestBody = () => {
+        if (!!!props.request.body) {
+          return ""
+        }
+        let obj = JSON.stringify(props.request.body, "", "\t\t")
+        return `,\n\tbody: \`${obj}\``.replace("}", "\t}") + "\n"
+      }
+
+      let result = `fetch("${props.request.url}", {
+        method: "${String(props.request.method).toUpperCase()}"${requestHeader()}${requestBody()}})\n\t.then(res => {\n\t\tconsole.log(res)\n\t})\n\t.catch(err => {\n\t\tconsole.error(err)\n\t})`
+      return result
+    }
 
 
     return {
-      request: props.request,
-      className: className,
-      requestParams,
       selected,
-      headers,
-      body,
+      templates,
     }
   },
   template: `
-  <div>
-
-    <h2>Request</h2>
-
-    <div class="request-bar">
-      <div :class="className">[[request.method]]</div>
-      <div class="request-bar__url">
-        [[request.url]]
-      </div>
-    </div>
-
+  <div style="margin-bottom: 70px">
     <div class="tabs">
-      <div v-for="(item, i) in requestParams" :key="i" 
-      :class="{
+      <div :class="{
         'tab': true,
-        'tab--active': selected == item
-      }" 
-      @click="selected = item">
-        [[item]]
+        'tab--active': selected == item.key,
+        'type-1': true,
+      }" v-for="(item, i) in templates" :key="i" @click="selected = item.key">
+        <span >[[item.key]]</span>
       </div>
     </div>
-
-    <div v-if="selected == 'headers'">
-      <table class="response-header">
-        <thead>
-          <tr>
-            <th>Key</th>
-            <th>Value</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="(item, i) in headers" :key="i">
-            <td>[[item.key]]</td>
-            <td>[[item.value]]</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-
-    <div v-if="selected == 'body'">
-
-      <div v-html="body"></div>
-
-    </div>
-
+    <code-view 
+      v-for="(item, i) in templates" 
+      :key="i" v-show="item.key == selected"
+      :text="item.value"
+    />
   </div>
   `
 }

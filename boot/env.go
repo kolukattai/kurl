@@ -1,20 +1,19 @@
 package boot
 
 import (
-	"encoding/json"
 	"os"
 	"path/filepath"
 
 	"github.com/kolukattai/kurl/models"
+	"gopkg.in/yaml.v2"
 )
 
 func UpdateConfig(configFileName string, context string) {
 	defaultVal := func() {
 		Config = &models.Config{
-			FilePath:     "api",
-			EnvVariables: []models.EnvVariables{},
-			DefaultEnv:   0,
-			BuildDir:     "dist",
+			Path:         "./",
+			EnvVariables: map[string]string{},
+			Build:        "dist",
 			Title:        "Kurl Docs",
 		}
 	}
@@ -26,7 +25,7 @@ func UpdateConfig(configFileName string, context string) {
 		defaultVal()
 	}
 
-	err = json.Unmarshal(file, &Config)
+	err = yaml.Unmarshal(file, &Config)
 	if err != nil {
 		defaultVal()
 	}

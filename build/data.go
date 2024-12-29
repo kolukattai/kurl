@@ -22,12 +22,12 @@ func createFileData(li []util.FileFolderInfo) {
 			continue
 		}
 
-		fn := strings.Replace(v.FilePath, boot.Config.FilePath + "/", "", 1)
+		fn := strings.Replace(v.FilePath, boot.Config.Path+"/", "", 1)
 
 		fmt.Println(fn)
 
 		id := base64.StdEncoding.EncodeToString([]byte(fn))
-		data, err := handler.PageDetail(filepath.Join(boot.Config.FilePath, v.FilePath), false)
+		data, err := handler.PageDetail(filepath.Join(boot.Config.Path, v.FilePath), false)
 		if err != nil {
 			panic(err)
 		}
@@ -37,8 +37,8 @@ func createFileData(li []util.FileFolderInfo) {
 			panic(err)
 		}
 
-		fmt.Println("NAME: ",fn)
-		outFile := path.Join(boot.Config.BuildDir, "data", "call", fmt.Sprintf("%v.json", id))
+		fmt.Println("NAME: ", fn)
+		outFile := path.Join(boot.Config.Build, "data", "call", fmt.Sprintf("%v.json", id))
 		err = os.WriteFile(outFile, byt, 0755)
 		if err != nil {
 			panic(err)
@@ -48,7 +48,7 @@ func createFileData(li []util.FileFolderInfo) {
 
 func updateFileList(li []util.FileFolderInfo) []util.FileFolderInfo {
 	for i, v := range li {
-		li[i].FilePath = strings.Replace(v.FilePath, boot.Config.FilePath+"/", "", 1)
+		li[i].FilePath = strings.Replace(v.FilePath, boot.Config.Path+"/", "", 1)
 		li[i].Files = updateFileList(li[i].Files)
 	}
 	return li
@@ -56,12 +56,12 @@ func updateFileList(li []util.FileFolderInfo) []util.FileFolderInfo {
 
 func filesData() {
 
-	os.MkdirAll(path.Join(boot.Config.BuildDir, "data"), 0755)
-	os.MkdirAll(path.Join(boot.Config.BuildDir, "data", "call"), 0755)
+	os.MkdirAll(path.Join(boot.Config.Build, "data"), 0755)
+	os.MkdirAll(path.Join(boot.Config.Build, "data", "call"), 0755)
 
-	location := path.Join(boot.Config.BuildDir, "data", "files.json")
+	location := path.Join(boot.Config.Build, "data", "files.json")
 
-	list, err := util.FileList(boot.Config.FilePath)
+	list, err := util.FileList(boot.Config.Path)
 	if err != nil {
 		panic(err)
 	}

@@ -5,15 +5,22 @@ const homeComponent = {
     const hashType = ref("");
     const data = ref(null);
 
+    const env = ref({});
+
     const fetchData = async (id) => {
       try {
         data.value = null
-        const res = await fetch(`/data/call/${id}.json`, {
+        let res = await fetch(`/data/call/${id}.json`, {
           method: "GET",
         })
-        const resData = await res.json()
+        let resData = await res.json()
         data.value = resData
 
+        res = await fetch(`/data/env.json`, {method: "GET"})
+        resData = await res.json();
+        if (!!resData.env) {
+          env.value = resData.env
+        }
       } catch (err) {
         console.error(err);
       }
@@ -34,8 +41,6 @@ const homeComponent = {
 
       hashType.value = idArr[0]
       currentHash.value = idArr[1]
-
-      console.log(idArr[1]);
       
       if (idArr[0] == "#call") {
         fetchData(idArr[1])
@@ -64,17 +69,20 @@ const homeComponent = {
       data: data,
       selected,
       headers,
+      env,
     }
   },
   template: `<div style="height:100%;">
     <div v-if="!!data && hashType == '#call'" class="home-layout">
       <div class="home-layout__request">
-        <h1>[[data.name]]</h1>
-        <request-component :request="data.request" />
         <docs-component :docs="data.docs" />
       </div>
       <div class="home-layout__response">
-        <response-component :response="data.response" />
+        <response-component v-if="!!data.response.length" 
+          :response="data.response" 
+          @newSaved="(val) => data.response = val"
+        />
+        <request-component v-else :request="data.request" />
       </div>
     </div>
     <div v-if="hashType == '#home'" class="index-page">
@@ -86,6 +94,9 @@ const homeComponent = {
         </div>
       </div>
       <docs-component :docs="data.docs" />
+    </div>
+    <div v-if="hashType == '#env'">
+      <env-component :env="env" />
     </div>
   </div>`
 }

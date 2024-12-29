@@ -20,13 +20,14 @@
           <input type="search" name="search" id="search" v-model="search" placeholder="search...">
           <drawer-component :search="search" :item="item" v-for="(item, i) in drawerData" :key="i" />
         </ul>
-        
       </aside>
       <main class="layout__main">
         {{block "content" .}}{{end}}
       </main>
     </div>
     <script src="/static/js/vue-lib.js"></script>
+    <script src="/static/js/code-view.js"></script>
+    <script src="/static/js/event.js"></script>
     {{block "scripts" .}}{{end}}
     <script src="/static/js/global.js"></script>
 

@@ -72,7 +72,11 @@ func FileExists(filename string) bool {
 
 func GetFileData(fileName string, config *models.Config, withDocumentation bool, skipFrontMatter bool) (frontMatter models.FrontMatter, documentationString string, err error) {
 
-	fileLocation := filepath.Join(config.FilePath, fileName)
+	fileLocation := filepath.Join(config.Path, fileName)
+
+	fileLocation = strings.Replace(fileLocation, config.Path + "/", "", 1)
+	
+	fileLocation = filepath.Join(config.Path, fileLocation)
 
 	fileLocation = fmt.Sprintf("%v.md", fileLocation)
 

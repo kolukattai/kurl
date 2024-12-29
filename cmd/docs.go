@@ -25,12 +25,12 @@ to quickly create a Cobra application.`,
 			panic(err)
 		}
 
-		configName, err := cmd.Flags().GetString("file")
+		configName, err := cmd.Root().Flags().GetString("file")
 		if err != nil {
 			panic(err)
 		}
 
-		ctx, err := cmd.Flags().GetString("context")
+		ctx, err := cmd.Root().Flags().GetString("context")
 		if err != nil {
 			panic(err)
 		}
@@ -53,7 +53,7 @@ func init() {
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
 	// docsCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
-	docsCmd.Flags().StringP("file", "f", "config.json", "configuration file name")
-	docsCmd.Flags().StringP("context", "c", ".", "environment file location")
+	// docsCmd.Flags().StringP("file", "f", "config.yaml", "configuration file name")
+	// docsCmd.Flags().StringP("context", "c", ".", "environment file location")
 	docsCmd.Flags().StringP("port", "p", "8080", "alter document running port")
 }

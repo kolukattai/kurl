@@ -8,13 +8,20 @@ import (
 	"github.com/kolukattai/kurl/util"
 )
 
-func Call(fileName string, saveResponse bool) {
+func Call(fileName string, saveResponse string) {
 
 	fm, _, err := util.GetFileData(fileName, boot.Config, false, false)
 
 	if err != nil {
 		panic(err)
 	}
+
+	err = util.UpdateFrontMatterWithEnvVariable(&fm)
+
+	if err != nil {
+		panic(err)
+	}
+
 	fmt.Printf("Request %v %v\n", fm.Method, fm.URL)
 	if fm.Body != nil {
 		byt, err := json.Marshal(fm.Body)
@@ -24,7 +31,7 @@ func Call(fileName string, saveResponse bool) {
 		fmt.Println("Request Body", string(byt))
 	}
 
-	resp, err := util.HTTPClient(fm, boot.Config)
+	resp, err := util.HTTPClient(&fm, boot.Config)
 
 	if err != nil {
 		panic(err.Error())
@@ -50,8 +57,8 @@ func Call(fileName string, saveResponse bool) {
 		fmt.Println(resp.BodyStr)
 	}
 
-	if saveResponse {
-		resp.Request = fm
+	if len(saveResponse) > 0 {
+		resp.Request.Name = saveResponse
 		err := util.SaveResponse(fm.RefID, resp)
 		if err != nil {
 			panic(err)

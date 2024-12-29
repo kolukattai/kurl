@@ -10,7 +10,7 @@ import (
 	"github.com/kolukattai/kurl/models"
 )
 
-func HTTPClient(param models.FrontMatter, config *models.Config) (*models.APIResponse, error) {
+func HTTPClient(param *models.FrontMatter, config *models.Config) (*models.APIResponse, error) {
 
 	url := param.URL
 	method := param.Method
@@ -76,6 +76,7 @@ func HTTPClient(param models.FrontMatter, config *models.Config) (*models.APIRes
 	}
 
 	response.Headers = resHeader
+	response.Request = *param
 
 	return response, nil
 }

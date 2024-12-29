@@ -3,7 +3,7 @@
 refID: f22ba25b-8fb3-401f-b153-d44e5a4c5480
 
 method: GET
-url: "http://localhost:3000/api/items"
+url: "{{BASE_URL}}/api/items"
 headers: {
   "Content-Type": "application/json"
 }

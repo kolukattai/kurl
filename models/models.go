@@ -23,15 +23,9 @@ type HTPClientConf struct {
 	Method  HTTPMethod        `json:"method"`
 }
 
-type EnvVariables struct {
-	Name      string            `json:"name"`
-	Variables map[string]string `json:"variables"`
-}
-
 type Config struct {
-	FilePath     string         `json:"dir"`
-	Title        string         `json:"title"`
-	EnvVariables []EnvVariables `json:"env_variables"`
-	DefaultEnv   int            `json:"selected_env"`
-	BuildDir     string         `json:"build_dir"`
+	Path         string            `json:"path" yaml:"path"`
+	Title        string            `json:"title" yaml:"title"`
+	EnvVariables map[string]string `json:"env" yaml:"env"`
+	Build        string            `json:"build" yaml:"build"`
 }

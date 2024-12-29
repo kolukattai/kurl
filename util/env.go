@@ -1,11 +1,15 @@
 package util
 
 import (
+	"encoding/json"
 	"fmt"
 	"io/fs"
 	"log"
 	"os"
+	"strings"
 
+	"github.com/kolukattai/kurl/boot"
+	"github.com/kolukattai/kurl/models"
 	"gopkg.in/yaml.v2"
 )
 
@@ -22,4 +26,30 @@ func PrintEnv(stru interface{}) {
 	}
 	fmt.Println("environment file name .env.example.yml is create in base path")
 	fmt.Println(string(yamlData))
+}
+
+func UpdateFrontMatterWithEnvVariable(fm *models.FrontMatter) error {
+	fmByt, err := json.Marshal(fm)
+	if err != nil {
+		return err
+	}
+
+	fmStr := UpdateEnvVariable(string(fmByt))
+
+	err = json.Unmarshal([]byte(fmStr), &fm)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func UpdateEnvVariable(input string) string {
+	if boot.Config.EnvVariables != nil {
+		for key, value := range boot.Config.EnvVariables {
+			if len(value) > 0 {
+				input = strings.ReplaceAll(input, fmt.Sprintf("{{%v}}", key), value)
+			}
+		}
+	}
+	return input
 }

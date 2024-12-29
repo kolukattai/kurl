@@ -122,7 +122,7 @@ ul li {
 
 .response-header th {
   padding: 10px;
-  background: #222226;
+  background: #35353c;
   color: #fff;
 }
 
@@ -132,16 +132,17 @@ ul li {
 
 .response-header tr td {
   padding: 10px;
-  border: 1px solid gray;
+  border: 1px solid #35353d;
 }
 
 pre {
   background: #2d2d2d;
   color: #ffffff;
-  border-radius: 4px;
+  border-radius: 0px 4px 4px 4px;
   padding: 15px;
   max-height: 70%;
   overflow-y: auto;
+  margin: 0px;
 }
 
 .tabs {
@@ -154,14 +155,43 @@ pre {
 .tab {
   padding: 10px 20px;
   margin-right: 5px;
-  border: 1px solid #ccc;
   border-radius: 5px 5px 0 0;
   background-color: var(--bg-color);
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+.tab.type-1 {
+  background: #222226;
+  border: 1px solid #cccccc00;
+}
+
+.tab .tab-close-btn {
+  color: var(--text-color);
+  border: 0px;
+  margin-left: 5px;
+  padding: 5px;
+  background: transparent;
+  cursor: pointer;
+}
+
+.tab .tab-close-btn:hover {
+  background: #2d2d2d;
 }
 
 .tab--active, .tab.active {
-  background-color: #007bff;
-  color: white;
+  color: #3ed68c;
+  border: none;
+  border-bottom: 4px solid gray;
+}
+
+.tab--active.type-1, .tab.active.type-1 {
+  background-color: #2d2d2d;
+  border: 0px solid transparent !important;
 }
 
 .tab-content {
@@ -277,5 +307,143 @@ a.drawer__item__link--active {
 .env-btn:hover {
   color: var(--vp-c-accent);
   font-weight: 600;
+}
+
+.flex {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.flex .flex-1 {
+  -webkit-box-flex: 1;
+      -ms-flex: 1;
+          flex: 1;
+}
+
+.env-view {
+  padding: 20px;
+  position: relative;
+  overflow-y: hidden;
+  max-height: 500px;
+}
+
+.env-view .env-input-layout {
+  display: -ms-grid;
+  display: grid;
+  -ms-grid-columns: 1fr 1fr;
+      grid-template-columns: 1fr 1fr;
+  grid-gap: 1rem;
+  padding-bottom: 1rem;
+}
+
+.env-view input {
+  padding: 5px 15px;
+  background: var(--bg-color);
+  line-height: 25px;
+  border: 2px solid gray;
+  color: var(--text-color);
+  font-weight: 500;
+}
+
+.env-view input:focus {
+  outline: 2px solid var(--vp-c-accent);
+}
+
+.env-view .save-btn, .env-view .add-env {
+  border: 0px;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  background: #4a4a56;
+  color: var(--text-color);
+  -webkit-transition: background .3s;
+  transition: background .3s;
+  border: 2px solid transparent;
+  z-index: 1;
+}
+
+.env-view .save-btn:hover, .env-view .add-env:hover {
+  background: #1b1b1f;
+}
+
+.env-view .save-btn:active, .env-view .add-env:active {
+  border: 2px solid var(--vp-c-accent);
+}
+
+.env-view .env-view-header {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+}
+
+.code-view {
+  position: relative;
+  height: 100%;
+}
+
+.code-view__copy {
+  position: absolute;
+  right: 5px;
+  cursor: pointer;
+  background: transparent;
+  border: none;
+}
+
+.code-view__copy:focus {
+  outline: 1px solid gray;
+}
+
+.code-view__copy .tooltip {
+  display: none;
+  top: 15px;
+  left: -50px;
+  position: absolute;
+}
+
+.code-view__copy .tooltip.active {
+  display: block;
+}
+
+.code-view__copy:hover .tooltip {
+  display: block;
+}
+
+.tooltip {
+  position: absolute;
+  top: 50px;
+  left: 50px;
+  -webkit-transform: translateY(-50%);
+          transform: translateY(-50%);
+  background: #000;
+  color: #fff;
+  padding: 2px 4px;
+  border-radius: 2px;
+  font-size: 12px;
+  font-weight: 400;
+}
+
+@-webkit-keyframes revealInput {
+  from {
+    height: 0px;
+  }
+  to {
+    height: 50px;
+  }
+}
+
+@keyframes revealInput {
+  from {
+    height: 0px;
+  }
+  to {
+    height: 50px;
+  }
 }
 /*# sourceMappingURL=global.css.map */
