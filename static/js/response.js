@@ -44,34 +44,27 @@ const eachResponse = {
 
       <h3>Status: [[data.status]]</h3>
 
+      <expandable-component label="Header">
+        <table class="response-header">
+          <thead>
+            <tr>
+              <th>Key</th>
+              <th>Value</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="(item, i) in headers" :key="i">
+              <td>[[item.key]]</td>
+              <td>[[item.value]]</td>
+            </tr>
+          </tbody>
+        </table>
+      </expandable-component>
 
-      <div v-if="!!body">
-        <h3>Body</h3>
+
+      <expandable-component label="Body" :expanded="true">
         <code-view :text="body"></code-view>
-      </div>
-
-
-      <h3 @click="showHeaders = !showHeaders" style="cursor: pointer;
-        background: #2d2d2d;
-        padding: 10px 15px;">
-        <span> [[showHeaders ? 'Hide' : 'Show']] Headers</span>
-      </h3>
-
-      <table class="response-header" v-if="showHeaders">
-        <thead>
-          <tr>
-            <th>Key</th>
-            <th>Value</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="(item, i) in headers" :key="i">
-            <td>[[item.key]]</td>
-            <td>[[item.value]]</td>
-          </tr>
-        </tbody>
-      </table>
-
+      </expandable-component>
 
 
       </div>
@@ -141,7 +134,7 @@ const responseComponent = {
       >
         <span @click="selected = i" >[[!!item.request.name ? item.request.name : saveTemplate(i)]]</span>
         <button v-if="showDeletable" class="tab-close-btn" @click="deleteSavedResponse(item, i)" >
-          <img src="/static/images/close.svg" height="24px" />
+          <img src="/static/images/bin.svg" height="20px" />
         </button>
       </div>
     </div>

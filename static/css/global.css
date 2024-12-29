@@ -6,6 +6,21 @@
   --bg-color: #1b1b1f;
 }
 
+::-webkit-scrollbar-track {
+  background-color: #2d2d2d;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  background-color: #2d2d2d;
+  padding: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  -webkit-box-shadow: inset 0 0 6px #222226;
+  background-color: #1b1b1f;
+}
+
 * {
   font-family: Arial, Helvetica, sans-serif;
 }
@@ -386,6 +401,8 @@ a.drawer__item__link--active {
 .code-view {
   position: relative;
   height: 100%;
+  max-height: 700px;
+  overflow-y: auto;
 }
 
 .code-view__copy {
@@ -427,6 +444,63 @@ a.drawer__item__link--active {
   border-radius: 2px;
   font-size: 12px;
   font-weight: 400;
+}
+
+.expandable .title {
+  cursor: pointer;
+  background: #2d2d2d;
+  padding: 10px 15px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  margin-bottom: 0px;
+}
+
+.expandable .title span {
+  -webkit-box-flex: 1;
+      -ms-flex: 1;
+          flex: 1;
+}
+
+.expandable .title .arrow {
+  -webkit-transition: .3s;
+  transition: .3s;
+  -webkit-transform: rotateZ(0deg);
+          transform: rotateZ(0deg);
+}
+
+.expandable .title .arrow.active {
+  -webkit-animation: expand .3s 1 0s forwards;
+          animation: expand .3s 1 0s forwards;
+}
+
+.expandable .content {
+  display: block;
+}
+
+@-webkit-keyframes expand {
+  from {
+    -webkit-transform: rotateZ(0deg);
+            transform: rotateZ(0deg);
+  }
+  to {
+    -webkit-transform: rotateZ(-90deg);
+            transform: rotateZ(-90deg);
+  }
+}
+
+@keyframes expand {
+  from {
+    -webkit-transform: rotateZ(0deg);
+            transform: rotateZ(0deg);
+  }
+  to {
+    -webkit-transform: rotateZ(-90deg);
+            transform: rotateZ(-90deg);
+  }
 }
 
 @-webkit-keyframes revealInput {

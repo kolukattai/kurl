@@ -16,7 +16,7 @@ func GetDrawerData() http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		paths, err := util.FileList(boot.Config.Path)
 		if err != nil {
-			fmt.Println("path",boot.Config.Path)
+			fmt.Println("path", boot.Config.Path)
 			w.Header().Add("Content-Type", "application/json")
 			w.WriteHeader(500)
 			json.NewEncoder(w).Encode(err)
@@ -57,7 +57,6 @@ func DeleteSavedResponse() http.Handler {
 	})
 }
 
-
 func GetPageDetailData() http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 
@@ -95,17 +94,11 @@ func PageDetail(id string, base64Encoded bool) (data map[string]interface{}, err
 
 	frontMatter, documentation, err := util.GetFileData(fName, boot.Config, true, false)
 	if err != nil {
-		fmt.Println(1,err.Error())
+		fmt.Println(1, err.Error())
 		return nil, err
 	}
 
 	fmt.Println(string(fileName))
-
-	title, err := util.GetFileName(string(fileName))
-	if err != nil {
-		fmt.Println(2,err.Error())
-		return nil, err
-	}
 
 	responseList := util.GetSavedResponse(frontMatter.RefID)
 
@@ -113,7 +106,6 @@ func PageDetail(id string, base64Encoded bool) (data map[string]interface{}, err
 		"request":  frontMatter,
 		"docs":     string(util.MdToHTML([]byte(documentation))),
 		"response": responseList,
-		"name":     title,
 	}
 
 	return data, nil

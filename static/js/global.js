@@ -72,6 +72,7 @@ app.component('each-response', eachResponse)
 app.component('docs-component', DocsComponent)
 app.component('tool-tip', ToolTip)
 app.component('request-template-component', requestTemplateComponent)
+app.component('expandable-component', expandableComponent)
 
 app.config.compilerOptions.delimiters = ['[[', ']]'];
 app.mount('#app')
