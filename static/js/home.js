@@ -9,6 +9,8 @@ const homeComponent = {
 
     const fetchData = async (id) => {
       try {
+        const isDev = document.querySelector("#dev-mode")
+        
         data.value = null
         let res = await fetch(`/data/call/${id}.json`, {
           method: "GET",
@@ -16,10 +18,12 @@ const homeComponent = {
         let resData = await res.json()
         data.value = resData
 
-        res = await fetch(`/data/env.json`, {method: "GET"})
-        resData = await res.json();
-        if (!!resData.env) {
-          env.value = resData.env
+        if (!!isDev) {
+          res = await fetch(`/data/env.json`, {method: "GET"})
+          resData = await res.json();
+          if (!!resData.env) {
+            env.value = resData.env
+          }
         }
       } catch (err) {
         console.error(err);

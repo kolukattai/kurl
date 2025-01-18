@@ -11,9 +11,13 @@ import (
 )
 
 func Init(name string) {
-	err := os.Mkdir(name, 0744)
-	if err != nil {
-		log.Fatalf("Error: %v",err.Error())
+	if name == "." {
+		name = ""
+	} else {
+		err := os.Mkdir(name, 0744)
+		if err != nil {
+			log.Fatalf("Error: %v", err.Error())
+		}
 	}
 
 	file, err := boot.StaticFolder.ReadFile("static/template/README.md")
@@ -21,19 +25,24 @@ func Init(name string) {
 		panic(err)
 	}
 
-	err = os.WriteFile(filepath.Join(name, "README.md"), file, 0744)
-	if err != nil {
-		panic(err)
-	}
 
 	conf := models.Config{
 		Path: "api",
 		Title: "API Documentation",
-		EnvVariables: map[string]string{},
+		EnvVariables: map[string]string{
+			"BASE": "http://localhost:9000",
+		},
 		Build: "dist",
 	}
 
+	boot.Config = &conf
+
 	err = os.MkdirAll(filepath.Join(name, conf.Path), 0744)
+	if err != nil {
+		panic(err)
+	}
+
+	err = os.WriteFile(filepath.Join(name, conf.Path, "README.md"), file, 0744)
 	if err != nil {
 		panic(err)
 	}
@@ -47,4 +56,6 @@ func Init(name string) {
 	if err != nil {
 		panic(err)
 	}
+
+	AddNewCall("my-first-api-call", name)
 }

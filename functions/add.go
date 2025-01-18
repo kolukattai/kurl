@@ -12,8 +12,17 @@ import (
 	"github.com/kolukattai/kurl/util"
 )
 
-func AddNewCall(name string) {
-	fileName := filepath.Join(boot.Config.Path, name)
+func AddNewCall(name string, folderName ...string) {
+	fileName := ""
+	if len(name) > 0 {
+		fileName = filepath.Join(boot.Config.Path, name)
+	}
+
+	for _, v := range folderName {
+		fileName = filepath.Join(v, fileName)
+	}
+
+	fmt.Printf("CONTENT: [%v] [%v] [%v]", boot.Config.Path, name, fileName)
 
 	fileName = fmt.Sprintf("%v.md", fileName)
 
@@ -23,7 +32,7 @@ func AddNewCall(name string) {
 
 	headers := "headers: {\n\t\"Content-Type\": \"application/json\"\n}\n"
 
-	fm := fmt.Sprintf("\nmethod: \"GET\"\nurl: \"http://example.com/api\"\n%v", headers)
+	fm := fmt.Sprintf("\nmethod: \"GET\"\nurl: \"{{BASE}}/api\"\n%v", headers)
 
 	refComment := "# do not change refID, this key is used to connect this api with it's saved response"
 
@@ -35,6 +44,7 @@ func AddNewCall(name string) {
 
 	err := os.MkdirAll(pathName, 0744)
 	if err != nil {
+		fmt.Println("nameParts", nameParts)
 		panic(err)
 	}
 

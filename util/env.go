@@ -29,6 +29,26 @@ func PrintEnv(stru interface{}) {
 }
 
 func UpdateFrontMatterWithEnvVariable(fm *models.FrontMatter) error {
+
+	url := fm.URL
+
+	// updating path params
+	if fm.Params != nil {
+		for key, val := range fm.Params {
+			url = strings.ReplaceAll(url, fmt.Sprintf("{{%v}}", key), fmt.Sprint(val))
+		}
+	}
+
+	// updating query params
+	if fm.QueryParams != nil {
+		for key, val := range fm.QueryParams {
+			url = strings.ReplaceAll(url, fmt.Sprintf("{{%v}}", key), fmt.Sprint(val))
+		}
+	}
+
+	// update url
+	fm.URL = url
+
 	fmByt, err := json.Marshal(fm)
 	if err != nil {
 		return err

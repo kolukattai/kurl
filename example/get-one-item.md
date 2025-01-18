@@ -3,7 +3,14 @@
 refID: 0193edca-cf3e-4634-9832-7fa5bf1bbcbf
 
 method: GET
-url: "http://localhost:3000/api/items/41"
+url: "http://localhost:3000/api/items/{{id}}"
+params: {
+  id: 21
+}
+queryParams: {
+  limit: 10,
+  skip: 10
+}
 headers: {
   "Content-Type": "application/json"
 }

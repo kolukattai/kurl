@@ -4,12 +4,15 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
+	"io"
 	"net/http"
+	"os"
 	"strconv"
 	"strings"
 
 	"github.com/kolukattai/kurl/boot"
 	"github.com/kolukattai/kurl/util"
+	"gopkg.in/yaml.v2"
 )
 
 func GetDrawerData() http.Handler {
@@ -30,6 +33,42 @@ func GetDrawerData() http.Handler {
 
 func GetEnv() http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Add("Content-Type", "application/json")
+		w.WriteHeader(200)
+		json.NewEncoder(w).Encode(boot.Config)
+	})
+}
+
+func UpdateEnv() http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+
+		val, err := io.ReadAll(r.Body)
+		if err != nil {
+			w.WriteHeader(400)
+			w.Write([]byte(err.Error()))
+		}
+
+		envObj := map[string]string{}
+
+		err = json.Unmarshal(val, &envObj)
+		if err != nil {
+			w.WriteHeader(400)
+			w.Write([]byte(err.Error()))
+		}
+		boot.Config.EnvVariables = envObj
+
+		byt, err := yaml.Marshal(boot.Config)
+		if err != nil {
+			w.WriteHeader(400)
+			w.Write([]byte(err.Error()))
+		}
+
+		err = os.WriteFile("config.yaml", byt, 0744)
+		if err != nil {
+			w.WriteHeader(400)
+			w.Write([]byte(err.Error()))
+		}
+
 		w.Header().Add("Content-Type", "application/json")
 		w.WriteHeader(200)
 		json.NewEncoder(w).Encode(boot.Config)

@@ -1,4 +1,4 @@
 generate:
 	go run main.go build
-docs:
+dev:
 	go build && ./kurl docs

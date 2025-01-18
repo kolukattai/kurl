@@ -6,14 +6,16 @@ type FrontMatterContent struct {
 }
 
 type FrontMatter struct {
-	RefID   string               `yaml:"refID" json:"refID"`
-	Name    string               `yaml:"name" json:"name"`
-	Method  HTTPMethod           `yaml:"method" json:"method"`
-	URL     string               `yaml:"url" json:"url"`
-	Headers map[string]string    `yaml:"headers" json:"headers"`
-	Body    map[string]string    `yaml:"body" json:"body"`
-	Title   string               `yaml:"title" json:"title"`
-	Content []FrontMatterContent `yaml:"content" json:"content"`
+	RefID       string                 `yaml:"refID" json:"refID"`
+	Name        string                 `yaml:"name" json:"name"`
+	Method      HTTPMethod             `yaml:"method" json:"method"`
+	URL         string                 `yaml:"url" json:"url"`
+	Headers     map[string]string      `yaml:"headers" json:"headers"`
+	Body        map[string]string      `yaml:"body" json:"body"`
+	Title       string                 `yaml:"title" json:"title"`
+	Content     []FrontMatterContent   `yaml:"content" json:"content"`
+	Params      map[string]interface{} `yaml:"params" json:"params"`
+	QueryParams map[string]interface{} `yaml:"queryParams" json:"queryParams"`
 }
 
 type APIResponse struct {

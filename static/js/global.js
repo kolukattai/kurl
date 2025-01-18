@@ -1,9 +1,9 @@
 const { createApp, ref, onMounted, computed, h, defineEmits } = Vue
 
+const isDev = document.querySelector("#dev-mode")
 
 const loadDevMode = async () => {
   try {
-    const isDev = document.querySelector("#dev-mode")
     if (!!isDev) {
       let res = await fetch("/data/env.json")
       res = await res.json()
@@ -34,7 +34,7 @@ const app = createApp({
         })
         const data = await res.json()
 
-        drawerData.value = [...data.data].filter((e) => ( !(e.fileName == "README.md" || e.fileName == "index.md" )))
+        drawerData.value = [...data.data].filter((e) => ( !(e.fileName == "README.md" || e.fileName == "index.md" || !/\.md/gi.test(e.fileName) )))
         console.log(data);
       } catch (err) {
         console.error(err);

@@ -6,6 +6,7 @@ package cmd
 import (
 	"fmt"
 
+	"github.com/kolukattai/kurl/boot"
 	"github.com/kolukattai/kurl/functions"
 	"github.com/spf13/cobra"
 )
@@ -21,6 +22,19 @@ given name and add the home page with default configuration file`,
 		if len(args) < 1 {
 			panic("please provide name to create project")
 		}
+
+		configName, err := cmd.Root().Flags().GetString("file")
+		if err != nil {
+			panic(err)
+		}
+
+		ctx, err := cmd.Root().Flags().GetString("context")
+		if err != nil {
+			panic(err)
+		}
+
+		boot.UpdateConfig(configName, ctx)
+
 		functions.Init(args[0])
 	},
 }

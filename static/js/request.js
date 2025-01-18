@@ -12,6 +12,30 @@ const requestComponent = {
 
     const updateTemplates = () => {
       let arr = []
+
+      let url = String(props.request.url)
+
+      console.log("PARAMA",!!props.request.params, !!props.request.queryParams);
+      
+      if (!!props.request.params) {
+        for (const key in props.request.params) {
+          url = url.replaceAll(`{{${key}}}`, props.request.params[key])
+          console.log("KE", key, url);
+        }
+      }
+
+      if (!!props.request.queryParams) {
+        console.log("URLS", url);
+        
+        let urlV = new URL(location)
+        for (const key in props.request.queryParams) {
+          urlV.searchParams.append(key, props.request.queryParams[key])
+        }
+        url += urlV.search
+      }
+
+      props.request.url = url
+
       arr.push({
         key: "curl",
         value: curlTemplate()

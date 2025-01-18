@@ -6,6 +6,7 @@ import (
 	"io/fs"
 	"os"
 	"path/filepath"
+	"strings"
 
 	"github.com/kolukattai/kurl/boot"
 	"github.com/kolukattai/kurl/util"
@@ -98,9 +99,13 @@ func Run() {
 
 	res := util.RenderTemplate(boot.TemplateFolder, nil, "home.html", data)
 
+	res = strings.ReplaceAll(res, "\t", "")
+	res = strings.ReplaceAll(res, "    ", "")
+	res = strings.ReplaceAll(res, "\n", "")
+
 	os.WriteFile(filepath.Join(boot.Config.Build, "index.html"), []byte(res), 0744)
 
-	filesData();
+	filesData()
 
 	saveFile()
 }

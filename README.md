@@ -10,10 +10,8 @@ if golang is installed on our system then we could use the following methods
 go install github.com/kolukattai/kurl
 ```
 
-## install using
-
 ## Create new endpoint
 ```sh
 kurl add my-get-api
 ```
-this will create 
+this will create endpoint for application
