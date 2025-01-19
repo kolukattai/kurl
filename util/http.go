@@ -1,10 +1,13 @@
 package util
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"io"
+	"mime/multipart"
 	"net/http"
+	"os"
 	"strings"
 
 	"github.com/kolukattai/kurl/models"
@@ -15,18 +18,26 @@ func HTTPClient(param *models.FrontMatter, config *models.Config) (*models.APIRe
 	url := param.URL
 	method := param.Method
 
-	var payloadBody io.Reader
+	var payloadBody bytes.Buffer
 
 	if param.Body != nil {
 		byt, err := json.Marshal(param.Body)
 		if err != nil {
 			panic(err)
 		}
-		payloadBody = strings.NewReader(string(byt))
+		payloadBody.Write(byt)
+		// payloadBody = strings.NewReader(string(byt))
+	}
+	if param.FormData != nil {
+		pBody, err := UpdateFormData(param, config)
+		if err != nil {
+			panic(err)
+		}
+		payloadBody = pBody
 	}
 
 	client := &http.Client{}
-	req, err := http.NewRequest(string(method), url, payloadBody)
+	req, err := http.NewRequest(string(method), url, &payloadBody)
 
 	if err != nil {
 		fmt.Println("ERR", err)
@@ -79,4 +90,52 @@ func HTTPClient(param *models.FrontMatter, config *models.Config) (*models.APIRe
 	response.Request = *param
 
 	return response, nil
+}
+
+func UpdateFormData(param *models.FrontMatter, config *models.Config) (requestBody bytes.Buffer, err error) {
+
+	// Create a buffer to store the multipart form data
+	// var requestBody bytes.Buffer
+	// Create a multipart writer for the buffer
+	writer := multipart.NewWriter(&requestBody)
+
+	for _, v := range param.FormData {
+		switch v.Type {
+		case models.FormDataTypeText:
+			er := writer.WriteField(v.Key, v.Value)
+			if er != nil {
+				return requestBody, er
+			}
+		case models.FormDataTypeFile:
+			// Open the file
+			file, er := os.Open(v.File)
+			if er != nil {
+				return requestBody, er
+			}
+			defer file.Close()
+
+			// Create the form file field, add the file
+			formFile, er := writer.CreateFormFile(v.Key, v.File)
+			if er != nil {
+				return requestBody, er
+			}
+
+			// Copy the content of the file into the form file
+			_, er = io.Copy(formFile, file)
+			if er != nil {
+				return requestBody, er
+			}
+
+			// Close the writer to finalize the form data
+			er = writer.Close()
+			if er != nil {
+				return requestBody, er
+			}
+		}
+
+	}
+
+	param.Headers["Content-Type"] = writer.FormDataContentType()
+
+	return
 }

@@ -57,5 +57,5 @@ func Init(name string) {
 		panic(err)
 	}
 
-	AddNewCall("my-first-api-call", name)
+	AddNewCall("example-api-call", name)
 }

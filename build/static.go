@@ -10,13 +10,21 @@ import (
 )
 
 func processStaticFolder() {
+	skipPattern := []string{".css.map", ".scss", "template"}
+		
+	skipThis := func(ite string) bool {
+		for _, v := range skipPattern {
+			if strings.Contains(ite, v) {
+				return true
+			}
+		}
+		return false
+	}
 
 	err := os.MkdirAll(filepath.Join(boot.Config.Build, "static"), 0744)
 	if err != nil {
 		panic(err)
 	}
-
-	skipPattern := []string{".css.map", ".scss"}
 
 	// Set the root folder of embedded files (can be empty for the root directory)
 	basePath := "static"
@@ -31,6 +39,10 @@ func processStaticFolder() {
 	for _, v := range fileInfos {
 		folderPath := filepath.Join(boot.Config.Build, "static", strings.Replace(v.FullPath, v.Name, "", 1))
 
+		if skipThis(folderPath) {
+			continue
+		}
+
 		err := os.MkdirAll(folderPath, 0744)
 		if err != nil {
 			panic(err)
@@ -42,14 +54,6 @@ func processStaticFolder() {
 			continue
 		}
 
-		skipThis := func(ite string) bool {
-			for _, v := range skipPattern {
-				if strings.Contains(ite, v) {
-					return true
-				}
-			}
-			return false
-		}
 
 		if skipThis(v.Name) {
 			continue
