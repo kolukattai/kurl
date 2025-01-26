@@ -19,6 +19,8 @@ func RunDoc(port string) {
 	http.Handle("GET /data/call/{id}", handler.GetPageDetailData())
 	http.Handle("GET /data/env.json", handler.GetEnv())
 	http.Handle("POST /data/env.json", handler.UpdateEnv())
+	http.Handle("PUT /api/request/{name}", handler.UpdateRequest())
+	http.Handle("POST /api/call/{name}", handler.MakeCall())
 
 	http.Handle("GET /", handler.HomePage())
 	http.Handle("DELETE /saved/{id}/{index}", handler.DeleteSavedResponse())

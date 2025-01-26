@@ -22,3 +22,11 @@ const EventBus = Vue.reactive({
     }
   }
 });
+
+const ObjToArr = (obj) => {
+  let arr = [];
+  for (const key in obj) {
+    arr.push({key: key, value: obj[key]})
+  }
+  return arr
+}

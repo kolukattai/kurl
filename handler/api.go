@@ -7,10 +7,13 @@ import (
 	"io"
 	"net/http"
 	"os"
+	"path/filepath"
 	"strconv"
 	"strings"
 
 	"github.com/kolukattai/kurl/boot"
+	"github.com/kolukattai/kurl/functions"
+	"github.com/kolukattai/kurl/models"
 	"github.com/kolukattai/kurl/util"
 	"gopkg.in/yaml.v2"
 )
@@ -39,6 +42,116 @@ func GetEnv() http.Handler {
 	})
 }
 
+func MakeCall() http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		val, err := io.ReadAll(r.Body)
+		if err != nil {
+			w.WriteHeader(400)
+			w.Write([]byte(err.Error()))
+			return
+		}
+
+		reqObj := models.FrontMatter{}
+
+		err = json.Unmarshal(val, &reqObj)
+		if err != nil {
+			w.WriteHeader(400)
+			w.Write([]byte(err.Error()))
+			return
+		}
+
+		id := r.PathValue("name")
+
+		fileName, err := base64.StdEncoding.DecodeString(id)
+		if err != nil {
+			w.WriteHeader(400)
+			w.Write([]byte(err.Error()))
+			return
+		}
+
+		resp := functions.Call(string(fileName), "")
+
+		respByt, err := json.Marshal(resp)
+		if err != nil {
+			w.WriteHeader(400)
+			w.Write([]byte(err.Error()))
+			return
+		}
+
+		w.WriteHeader(200)
+		w.Header().Add("Content-Type", "application/json")
+		w.Write(respByt)
+	})
+}
+
+func UpdateRequest() http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		val, err := io.ReadAll(r.Body)
+		if err != nil {
+			w.WriteHeader(400)
+			w.Write([]byte(err.Error()))
+			return
+		}
+
+		reqObj := models.FrontMatter{}
+
+		err = json.Unmarshal(val, &reqObj)
+		if err != nil {
+			w.WriteHeader(400)
+			w.Write([]byte(err.Error()))
+			return
+		}
+
+		id := r.PathValue("name")
+
+		fmByt, err := yaml.Marshal(reqObj)
+		if err != nil {
+			w.WriteHeader(400)
+			w.Write([]byte(err.Error()))
+			return
+		}
+
+		fileName, err := base64.StdEncoding.DecodeString(id)
+		if err != nil {
+			w.WriteHeader(400)
+			w.Write([]byte(err.Error()))
+			return
+		}
+
+		fName := strings.Replace(string(fileName), boot.Config.Path, "", 1)
+
+		_, docs, err := util.GetFileData(fName, boot.Config, true, false)
+		if err != nil {
+			w.WriteHeader(400)
+			w.Write([]byte(err.Error()))
+			return
+		}
+
+		comments := `# do not change refID, this key is used to connect this api with it's saved response`
+
+		fileVal := fmt.Sprintf("---\n%v\n%v\n---\n\n%v", comments, string(fmByt), docs)
+
+		fmt.Println("DA", fName)
+		err = os.WriteFile(filepath.Join(boot.Config.Path, fName), []byte(fileVal), 0755)
+		if err != nil {
+			w.WriteHeader(400)
+			w.Write([]byte(err.Error()))
+			return
+		}
+
+		// _, docs, err := util.GetFileData(id, boot.Config, true, true)
+		// if err != nil {
+		// 	w.WriteHeader(400)
+		// 	w.Write([]byte(err.Error()))
+		// 	return
+		// }
+
+		w.WriteHeader(200)
+		w.Write([]byte(fileVal))
+
+	})
+}
+
 func UpdateEnv() http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 
@@ -46,6 +159,7 @@ func UpdateEnv() http.Handler {
 		if err != nil {
 			w.WriteHeader(400)
 			w.Write([]byte(err.Error()))
+			return
 		}
 
 		envObj := map[string]string{}
@@ -54,6 +168,7 @@ func UpdateEnv() http.Handler {
 		if err != nil {
 			w.WriteHeader(400)
 			w.Write([]byte(err.Error()))
+			return
 		}
 		boot.Config.EnvVariables = envObj
 
@@ -61,12 +176,14 @@ func UpdateEnv() http.Handler {
 		if err != nil {
 			w.WriteHeader(400)
 			w.Write([]byte(err.Error()))
+			return
 		}
 
 		err = os.WriteFile("config.yaml", byt, 0744)
 		if err != nil {
 			w.WriteHeader(400)
 			w.Write([]byte(err.Error()))
+			return
 		}
 
 		w.Header().Add("Content-Type", "application/json")

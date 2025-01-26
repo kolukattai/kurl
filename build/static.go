@@ -11,7 +11,7 @@ import (
 
 func processStaticFolder() {
 	skipPattern := []string{".css.map", ".scss", "template"}
-		
+
 	skipThis := func(ite string) bool {
 		for _, v := range skipPattern {
 			if strings.Contains(ite, v) {
@@ -37,9 +37,11 @@ func processStaticFolder() {
 	}
 
 	for _, v := range fileInfos {
+		fmt.Println("STATIC", v.Name)
 		folderPath := filepath.Join(boot.Config.Build, "static", strings.Replace(v.FullPath, v.Name, "", 1))
 
 		if skipThis(folderPath) {
+			fmt.Println("STATIC SKIPPED", folderPath)
 			continue
 		}
 
@@ -54,11 +56,11 @@ func processStaticFolder() {
 			continue
 		}
 
-
 		if skipThis(v.Name) {
 			continue
 		}
 
+		fmt.Println("PF", filePath)
 		err = os.WriteFile(filePath, v.FileData, 0744)
 		if err != nil {
 			panic(err)

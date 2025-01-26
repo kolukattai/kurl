@@ -4,11 +4,18 @@ const requestComponent = {
   setup(props) {
 
     const selected = ref("curl");
-    const templates = ref([]);
+    const req = ref({});
 
     Vue.onMounted(() => {
       updateTemplates()
     });
+
+    const templates = computed(() => {
+      req.value = props.request
+      console.log(req.value);
+      
+      return updateTemplates()
+    })
 
     const updateTemplates = () => {
       let arr = []
@@ -31,7 +38,7 @@ const requestComponent = {
         for (const key in props.request.queryParams) {
           urlV.searchParams.append(key, props.request.queryParams[key])
         }
-        url += urlV.search
+        url = new URL(url).origin + new URL(url).pathname + urlV.search
       }
 
       props.request.url = url
@@ -44,7 +51,8 @@ const requestComponent = {
         key: "JavaScript",
         value: fetchTemplate()
       })
-      templates.value = arr.map((e) => {
+      // templates.value
+      return arr.map((e) => {
         let el = e
         el.value = updateVariables(e.value)
         return el

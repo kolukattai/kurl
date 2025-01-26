@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{.Title}}</title>
+    <!-- <link rel="stylesheet" href="editormd/css/editormd.css" /> -->
     <link rel="stylesheet" href="/static/css/global.css">
     {{block "styles" .}}{{end}}
 </head>
@@ -26,8 +27,11 @@
       </main>
     </div>
 
+    <script src="/static/js/markdown.js"></script>
+
     <script src="/static/js/ws.js"></script>
     <script src="/static/js/vue-lib.js"></script>
+
     <script src="/static/js/code-view.js"></script>
     <script src="/static/js/event.js"></script>
     {{block "scripts" .}}{{end}}

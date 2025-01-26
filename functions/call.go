@@ -5,10 +5,11 @@ import (
 	"fmt"
 
 	"github.com/kolukattai/kurl/boot"
+	"github.com/kolukattai/kurl/models"
 	"github.com/kolukattai/kurl/util"
 )
 
-func Call(fileName string, saveResponse string) {
+func Call(fileName string, saveResponse string) *models.APIResponse {
 
 	fm, _, err := util.GetFileData(fileName, boot.Config, false, false)
 
@@ -67,4 +68,5 @@ func Call(fileName string, saveResponse string) {
 		fmt.Println("Response saved...")
 	}
 
+	return resp
 }

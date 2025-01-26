@@ -73,6 +73,11 @@ app.component('docs-component', DocsComponent)
 app.component('tool-tip', ToolTip)
 app.component('request-template-component', requestTemplateComponent)
 app.component('expandable-component', expandableComponent)
+app.component('api-call', ApiCall)
+app.component('MethodUrl', MethodUrl)
+app.component('ReqHeader', ReqHeader)
+app.component('ReqBody', ReqBody)
+
 
 app.config.compilerOptions.delimiters = ['[[', ']]'];
 app.mount('#app')

@@ -3,7 +3,10 @@ const homeComponent = {
 
     const currentHash = ref(window.location.hash);
     const hashType = ref("");
+    const docs = ref(true);
     const data = ref(null);
+    const changes = ref(true);
+    const requestResponse = ref(null);
 
     const env = ref({});
 
@@ -67,6 +70,32 @@ const homeComponent = {
 
     const headers = ["one", "two", "three"];
 
+    const onRequestChange = (e) => {
+      let val = {...data.value, request: e}
+      data.value = val
+      changes.value = false
+      setTimeout(() => {
+        changes.value = true
+      }, 10);
+      console.log("val", val);
+    }
+
+    const submitEve = async (e) => {
+      try {
+        const res = await fetch(`/api/call/${currentHash.value}`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(e)
+        }).then((res) => res.json())
+        requestResponse.value = {...res, name: "Response"};
+        console.log(res);
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
     return {
       currentHash: currentHash,
       hashType: hashType,
@@ -74,14 +103,34 @@ const homeComponent = {
       selected,
       headers,
       env,
+      docs,
+      onRequestChange,
+      changes,
+      submitEve,
+      requestResponse,
     }
   },
   template: `<div style="height:100%;">
     <div v-if="!!data && hashType == '#call'" class="home-layout">
       <div class="home-layout__request">
-        <docs-component :docs="data.docs" />
+        <div class="home-layout__request__header">
+          <button @click="docs = !docs" class="btn">
+            [[!docs ? 'Try API' : 'DOCS']]
+          </button>
+        </div>
+        <div v-if="docs" class="home-layout__request__edit">
+          <api-call 
+            :request="data.request" 
+            @changeVal="onRequestChange($event)" 
+            @submitEve="submitEve($event)"
+            :response="requestResponse"
+          />
+        </div>
+        <div v-else>
+          <docs-component :docs="data.docs" />
+        </div>
       </div>
-      <div class="home-layout__response">
+      <div class="home-layout__response" v-if="changes">
         <response-component v-if="!!data.response.length" 
           :response="data.response" 
           @newSaved="(val) => data.response = val"

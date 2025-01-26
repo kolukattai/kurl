@@ -28,7 +28,7 @@ const CodeView = {
       <img v-else src="/static/images/check.svg" height="24px" width="24px" alt="copy" />
     </button>
     <pre><code>[[text]]</code></pre>
-  <div>`
+  </div>`
 }
 
 const ToolTip = {
